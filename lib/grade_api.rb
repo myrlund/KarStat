@@ -10,7 +10,7 @@ module GradeAPI
   @@report_path = "/karstat/makeReport.do"
   @@report_uri = "http://www.ntnu.no#{@@report_path}"
   
-  @@agent = Mechanize.new { |a| a.log = Logger.new('mech.log') }
+  @@agent = Mechanize.new
   
   @@lang_map = [
     :candidates,
