@@ -1,6 +1,6 @@
 require 'grade_api'
 
 GradeAPI.configure do |config|
-  config[:username] = "username"
-  config[:password] = "password"
+  config[:username] = ENV['KARSTAT_USERNAME']
+  config[:password] = ENV['KARSTAT_PASSWORD']
 end
