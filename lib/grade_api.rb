@@ -37,7 +37,7 @@ module GradeAPI
   end
   
   def self.login
-    @@agent.auth(config[:username], config[:password])
+    @@agent.auth(ENV['KARSTAT_USERNAME'], ENV['KARSTAT_PASSWORD'])
     @@agent.get(@@login_uri)
   end
 
