@@ -1,3 +1,6 @@
+require 'grade_api'
 
-GradeAPI.config[:username] = "myrlund"
-GradeAPI.config[:password] = "ionasM88"
+GradeAPI.configure do |config|
+  config[:username] = "username"
+  config[:password] = "password"
+end

@@ -24,17 +24,24 @@ module GradeAPI
     :fail_before_exam,
   ]
   
+  def self.config
+    @@config ||= {}
+  end
+  
+  def self.config=(hash)
+    @@config = hash
+  end
+  
+  def self.configure
+    yield config
+  end
+  
+  def self.login
+    @@agent.auth(config[:username], config[:password])
+    @@agent.get(@@login_uri)
+  end
+
   class << self
-    
-    @@config = { :username => "myrlund", :password => "" }
-    
-    def config
-      @@config ||= {}
-    end
-    
-    def config=(config)
-      @@config = config
-    end
     
     def get(code, options={})
       html_doc = Nokogiri::HTML(raw(code))
@@ -93,13 +100,6 @@ module GradeAPI
         grades
       end
     
-    
-      def login
-        puts "Uname: #{GradeAPI.config[:username]}"
-        @@agent.auth(GradeAPI.config[:username], GradeAPI.config[:password])
-        @@agent.get(@@login_uri)
-      end
-
       def raw(code)
         login
         report_page = @@agent.post(@@report_uri)
