@@ -1,3 +1,3 @@
 Karstat::Application.routes.draw do
-  get ":code" => "courses#show", :as => :grade
+  get ":code" => "subjects#show", :as => :grade
 end

@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  subject_id: 1
+  semester: MyString
+  year: 1
+  content: MyText
+
+two:
+  subject_id: 1
+  semester: MyString
+  year: 1
+  content: MyText
