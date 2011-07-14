@@ -24,6 +24,17 @@ module GradeAPI
     :fail_before_exam,
   ]
   
+  @@option_key_map = {
+    :year => ["fromYear", "toYear"],
+    :semester => ["fromSemester", "toSemester"],
+  }
+  @@option_value_map = {
+    :semester => {
+      "s" => "VÅR",
+      "f" => "HØST",
+    }
+  }
+  
   def self.config
     @@config ||= {}
   end
@@ -44,7 +55,8 @@ module GradeAPI
   class << self
     
     def get(code, options={})
-      html_doc = Nokogiri::HTML(raw(code))
+      puts "Got options: #{options.inspect}"
+      html_doc = Nokogiri::HTML(raw(code, options))
       tables = html_doc.css(".questTop")
     
       if tables.length == 2
@@ -100,11 +112,30 @@ module GradeAPI
         grades
       end
     
-      def raw(code)
+      def raw(code, options={})
         login
+        
         report_page = @@agent.post(@@report_uri)
+        
         form = report_page.form_with(:action => @@report_path)
         form['courseName'] = code
+        
+        # Insert provided options in a safe way
+        options.each do |key, value|
+          if @@option_key_map.has_key?(key)
+            if @@option_value_map.has_key?(key) and @@option_value_map[key].has_key?(value)
+              field_value = @@option_value_map[key][value]
+            else
+              field_value = value
+            end
+            
+            @@option_key_map[key].each do |field|
+              form[field] = field_value
+              puts "Filled in: #{field} with '#{field_value}'"
+            end
+          end
+        end
+        
         result = form.submit
 
         result.body

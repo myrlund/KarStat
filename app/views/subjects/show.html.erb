@@ -1,27 +1,37 @@
 
 <h1><%= @code %></h1>
 
-<h2>Grades</h2>
-<dl>
-  <% @stats[:grades].each do |key, value| %>
-    <dt><%= key.upcase %></dt>
-    <dd><%= value %></dd>
-  <% end %>
-</dl>
+<% form_tag "", :method => :get do %>
+  <%= text_field_tag "year", @filter_params[:year], :placeholder => "Year" %>
+  <%= select_tag "semester", raw(semester_options) %>
+  <%= submit_tag "Update" %>
+<% end %>
 
-<h2>Meta</h2>
-<dl>
-  <% @stats[:meta].each do |key, value| %>
-    <dt><%= t(key) %></dt>
-    <dd>
-      <dl>
-        <% value.each do |key, n| %>
-          <dt><%= t(key) %></dt>
-          <dd><%= n %></dd>
-        <% end %>
-      </dl>
-    </dd>
-  <% end %>
-</dl>
+<p>Export as <%= link_to "JSON", grade_path(@code, @filter_params.merge(:format => :json)) %> or <%= link_to "XML", grade_path(@code, @filter_params.merge(:format => :xml)) %>.</p>
 
-<p>See <%= link_to "JSON", grade_path(@code, :format => :json) %> or <%= link_to "XML", grade_path(@code, :format => :xml) %> versions as well.</p>
+<% unless @statistic.content.nil? %>
+
+  <h2>Grades</h2>
+  <dl>
+    <% @statistic.content[:grades].each do |key, value| %>
+      <dt><%= key.upcase %></dt>
+      <dd><%= value %></dd>
+    <% end %>
+  </dl>
+
+  <h2>Meta</h2>
+  <dl>
+    <% @statistic.content[:meta].each do |key, value| %>
+      <dt><%= t(key) %></dt>
+      <dd>
+        <dl>
+          <% value.each do |key, n| %>
+            <dt><%= t(key) %></dt>
+            <dd><%= n %></dd>
+          <% end %>
+        </dl>
+      </dd>
+    <% end %>
+  </dl>
+  
+<% end %>
